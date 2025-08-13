@@ -1,0 +1,60 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    id 'org.springframework.boot' apply false
+    id 'org.jetbrains.kotlin.jvm' apply false
+    id 'org.jetbrains.kotlin.plugin.jpa' apply false
+    id 'org.jetbrains.kotlin.plugin.spring' apply false
+}
+allprojects {
+    group = 'com.funnyJack'
+    version = '0.0.1-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'kotlin'
+    //https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#managing-dependencies.dependency-management-plugin.using-in-isolation
+    apply plugin: 'io.spring.dependency-management'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/release' }
+        maven { url 'https://repo.spring.io/milestone' }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.bell-sw.com' }
+    }
+    //kotlin
+    dependencies {
+        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+        implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib'
+        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
+        implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect'
+        // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-test
+        testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-test'
+    }
+
+    compileKotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
+            freeCompilerArgs.add('-Xjvm-default=all')
+            javaParameters = true
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            exceptionFormat = 'full'
+        }
+    }
+    afterEvaluate {
+        //set image name
+//        bootBuildImage {
+//            imageName = "registry.cn-hangzhou.aliyuncs.com/yukunyuan-tools/${project.name}"
+//        }
+    }
+
+    task prepareKotlinBuildScriptModel {
+
+    }
+}

@@ -1,0 +1,46 @@
+apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
+apply plugin: 'org.springframework.boot'
+
+//spring
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+//kotlin
+dependencies {
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-test
+    testImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-test'
+}
+
+//jpa
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+}
+
+//database driver
+dependencies {
+// https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation 'org.postgresql:postgresql:42.7.3'
+}
+
+//errors
+dependencies {
+    implementation 'com.github.czp3009:spring-errors:0.0.2'
+}
+
+dependencies {
+//    implementation project(':common')
+//    implementation project(':persistent-starter')
+}
+
+//
+//dependencies {
+//    testImplementation project(':spring-test-starter')
+//}

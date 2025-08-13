@@ -1,0 +1,25 @@
+apply plugin: 'kotlin-spring'
+apply plugin: 'org.springframework.boot'
+
+//spring
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter
+    implementation 'org.springframework.boot:spring-boot-starter'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
+}
+
+//database migration
+dependencies {
+// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    implementation 'org.flywaydb:flyway-core:10.15.0'
+// https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql
+    implementation 'org.flywaydb:flyway-database-postgresql:10.15.0'
+// https://mvnrepository.com/artifact/org.postgresql/postgresql
+    runtimeOnly 'org.postgresql:postgresql:42.7.3'
+}
+
+dependencies {
+}
