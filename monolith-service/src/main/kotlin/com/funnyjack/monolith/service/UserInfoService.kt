@@ -3,6 +3,7 @@ package com.funnyjack.monolith.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.funnyjack.monolith.constant.LoginConstant
 import com.funnyjack.monolith.model.LoginResponseModel
+import com.funnyjack.monolith.util.JwtUtil
 import com.hiczp.spring.error.BadRequestException
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -26,6 +27,7 @@ class UserInfoService(
         if (result.openid == null) {
             throw BadRequestException("login failed, error code: ${result.errcode}, error message: ${result.errmsg}")
         }
-        return result.openid
+        // 生成 JWT token
+        return JwtUtil.generateToken(result.openid)
 }
 }

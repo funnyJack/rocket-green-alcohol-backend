@@ -35,6 +35,12 @@ dependencies {
     implementation 'com.github.czp3009:spring-errors:0.0.2'
 }
 
+//jwt
+dependencies {
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+}
+
 dependencies {
 //    implementation project(':common')
 //    implementation project(':persistent-starter')
