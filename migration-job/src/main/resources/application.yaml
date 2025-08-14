@@ -1,0 +1,14 @@
+server:
+  error:
+    include-message: always
+    include-exception: true
+    include-binding-errors: always
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: migration-job
+# 需要填写云端数据库地址
+#  datasource:
+#    url:

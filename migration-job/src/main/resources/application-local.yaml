@@ -1,0 +1,17 @@
+debug: true
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:54321/rocket_green_alcohol?useUnicode=true&characterEncoding=UTF-8
+    username: postgres
+    password: 123456
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

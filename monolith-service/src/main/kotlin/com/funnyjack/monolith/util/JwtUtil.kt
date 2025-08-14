@@ -2,12 +2,12 @@ package com.funnyjack.monolith.util
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import java.util.Date
+import java.util.*
 
 object JwtUtil {
     private const val SECRET_KEY = "funnyJack" // 在生产环境中应该使用更安全的方式存储
     private const val EXPIRATION_TIME: Long = 24 * 60 * 60 * 1000 // 24小时 (毫秒)
-
+//        10*1000
 
     fun generateToken(openid: String): String {
         val now = Date()

@@ -25,12 +25,12 @@ class CurrentUserOpenIdArgumentResolver : HandlerMethodArgumentResolver {
     ): String? {
         val request = webRequest.nativeRequest as jakarta.servlet.http.HttpServletRequest
         val token = request.getHeader("Authorization")?.replace("Bearer ", "")
-        
+
         // 如果 token 不存在或无效，返回 401 错误
         if (token == null || !JwtUtil.validateToken(token)) {
-           throw UnauthorizedException("登录信息过期，请重新登录")
+            throw UnauthorizedException("登录信息过期，请重新登录")
         }
-        
+
         return JwtUtil.getOpenidFromToken(token)
     }
 }
