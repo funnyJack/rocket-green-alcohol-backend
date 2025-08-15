@@ -16,25 +16,23 @@ class OrderService(
 ) {
     fun createOrder(openid: String,orderCreateModel: OrderCreateModel): Order {
         // Check if user with this openid exists
-        if (userRepository.findByOpenid(openid) == null) {
+        val user= userRepository.findByOpenid(openid)
+        if (user == null) {
             throw BadRequestException("User with this openid does not exist")
         }
 
+       val savedUser= user.apply{
+            this.currentContractType = orderCreateModel.contractType
+        }.let{
+            userRepository.save(it)
+        }
+
         val order = Order(
-            openid = openid,
+            user = savedUser,
             contractType = orderCreateModel.contractType
         )
 
         return orderRepository.save(order)
-    }
-
-    fun getOrdersByOpenid(openid: String): List<Order> {
-        // Check if user with this openid exists
-        if (userRepository.findByOpenid(openid) == null) {
-            throw BadRequestException("User with this openid does not exist")
-        }
-        
-        return orderRepository.findByOpenid(openid)
     }
 
     fun getOrderById(id: Long): Order {

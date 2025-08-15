@@ -8,6 +8,6 @@ CREATE TYPE contract_type AS ENUM (
 CREATE TABLE "order"
 (
     id            SERIAL PRIMARY KEY,
-    openid        TEXT NOT NULL REFERENCES "user"(openid),
+    user_id        INTEGER NOT NULL REFERENCES "user"(id),
     contract_type contract_type NOT NULL
 );

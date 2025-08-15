@@ -1,6 +1,8 @@
 package com.funnyjack.monolith.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcType
+import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
@@ -26,7 +28,12 @@ data class User(
     @Column
     var address: String? = null,
 
-    @OneToMany(mappedBy = "openid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @Column
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType::class)
+    var currentContractType: ContractType? = null,
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var orders: List<Order> = mutableListOf()
 )
 

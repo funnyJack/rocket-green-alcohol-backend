@@ -13,11 +13,7 @@ data class Order(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(nullable = false)
-    var openid: String,
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "openid", referencedColumnName = "openid", insertable = false, updatable = false)
     var user: User? = null,
 
     @Column(nullable = false)
@@ -26,14 +22,12 @@ data class Order(
     var contractType: ContractType
 )
 
-enum class ContractType {
-    HYDROGEN_FRIENDS,
-    CONTRACTED_OWNER,
-    GREEN_ALCOHOL_PIONEER,
-    GREEN_ALCOHOL_PARTNERS
+enum class ContractType(val displayName:String) {
+    HYDROGEN_FRIENDS("氢友"),
+    CONTRACTED_OWNER("签约车主"),
+    GREEN_ALCOHOL_PIONEER("绿醇先锋"),
+    GREEN_ALCOHOL_PARTNERS("绿醇合伙人")
 }
 
 @Repository
-interface OrderRepository : CrudRepository<Order, Long> {
-    fun findByOpenid(openid: String): List<Order>
-}
+interface OrderRepository : CrudRepository<Order, Long>

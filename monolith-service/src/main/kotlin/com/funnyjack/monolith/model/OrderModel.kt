@@ -19,7 +19,7 @@ data class OrderViewModel(
 fun com.funnyjack.monolith.entity.Order.toViewModel(): OrderViewModel {
     return OrderViewModel(
         id = id,
-        openid = openid,
+        openid = user!!.openid,
         contractType = contractType
     )
 }

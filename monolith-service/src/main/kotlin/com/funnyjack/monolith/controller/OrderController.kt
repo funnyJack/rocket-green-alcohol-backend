@@ -18,10 +18,6 @@ class OrderController(
         @CurrentUserOpenId openid: String
     ): OrderViewModel = orderService.createOrder(openid,orderCreateModel).toViewModel()
 
-    @GetMapping
-    fun getCurrentUserOrders(@CurrentUserOpenId openid: String): List<OrderViewModel> =
-        orderService.getOrdersByOpenid(openid).map { it.toViewModel() }
-
     @GetMapping("/{id}")
     fun getOrderById(@PathVariable id: Long): OrderViewModel =
         orderService.getOrderById(id).toViewModel()

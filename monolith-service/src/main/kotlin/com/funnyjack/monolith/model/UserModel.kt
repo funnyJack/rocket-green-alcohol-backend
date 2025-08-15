@@ -23,7 +23,8 @@ data class UserViewModel(
     val avatarUrl: String?,
     val nickname: String?,
     val phoneNumber: String?,
-    val address: String?
+    val address: String?,
+    val currentContractType: String? = null
 )
 
 fun User.toViewModel(): UserViewModel {
@@ -33,6 +34,7 @@ fun User.toViewModel(): UserViewModel {
         avatarUrl = avatarUrl,
         nickname = nickname,
         phoneNumber = phoneNumber,
-        address = address
+        address = address,
+        currentContractType = currentContractType?.displayName
     )
 }
