@@ -24,7 +24,10 @@ data class User(
     var phoneNumber: String? = null,
 
     @Column
-    var address: String? = null
+    var address: String? = null,
+
+    @OneToMany(mappedBy = "openid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var orders: List<Order> = mutableListOf()
 )
 
 @Repository

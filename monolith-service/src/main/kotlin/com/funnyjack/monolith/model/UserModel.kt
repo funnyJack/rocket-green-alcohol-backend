@@ -1,5 +1,7 @@
 package com.funnyjack.monolith.model
 
+import com.funnyjack.monolith.entity.User
+
 data class UserCreateModel(
     val openid: String,
     val avatarUrl: String? = null,
@@ -23,3 +25,14 @@ data class UserViewModel(
     val phoneNumber: String?,
     val address: String?
 )
+
+fun User.toViewModel(): UserViewModel {
+    return UserViewModel(
+        id = id,
+        openid = openid,
+        avatarUrl = avatarUrl,
+        nickname = nickname,
+        phoneNumber = phoneNumber,
+        address = address
+    )
+}

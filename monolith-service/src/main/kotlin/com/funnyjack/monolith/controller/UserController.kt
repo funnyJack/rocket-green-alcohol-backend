@@ -6,6 +6,7 @@ import com.funnyjack.monolith.model.LoginRequestModel
 import com.funnyjack.monolith.model.UserCreateModel
 import com.funnyjack.monolith.model.UserPatchModel
 import com.funnyjack.monolith.model.UserViewModel
+import com.funnyjack.monolith.model.toViewModel
 import com.funnyjack.monolith.service.UserService
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
@@ -58,16 +59,5 @@ class UserController(
         @RequestBody loginModel: LoginRequestModel
     ): String {
         return userService.login(loginModel.jsCode)
-    }
-
-    fun User.toViewModel(): UserViewModel {
-        return UserViewModel(
-            id = id,
-            openid = openid,
-            avatarUrl = avatarUrl,
-            nickname = nickname,
-            phoneNumber = phoneNumber,
-            address = address
-        )
     }
 }

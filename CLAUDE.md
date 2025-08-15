@@ -26,18 +26,19 @@ protected endpoints.
 ## Key Components
 
 1. **Authentication Flow**:
-    - Users login via WeChat jsCode through `/userInfos/login` endpoint
+    - Users login via WeChat jsCode through `/users/login` endpoint (not `/userInfos/login` as previously documented)
     - Service calls WeChat API to exchange jsCode for openid
     - Generates JWT token with openid as subject
     - Protected endpoints use `@CurrentUserOpenId` annotation to extract openid from JWT
 
 2. **Key Classes**:
-    - `UserController` - Example protected endpoint using JWT authentication
-    - `UserInfoController` - Handles login endpoint
-    - `UserInfoService` - Business logic for user authentication
+    - `UserController` - Handles user CRUD operations and login endpoint
+    - `UserService` - Business logic for user management and authentication
     - `CurrentUserOpenIdArgumentResolver` - Resolves JWT token to openid
     - `JwtUtil` - JWT token generation and validation
     - `LoginConstant` - WeChat API configuration
+    - `User` - JPA entity for user data
+    - `UserRepository` - Spring Data JPA repository for user entity
 
 ## Development Commands
 
@@ -73,8 +74,14 @@ protected endpoints.
 
 ## API Endpoints
 
-- POST `/api/userInfos/login` - Login with WeChat jsCode
-- GET `/api/users/me` - Get current user info (protected endpoint)
+- POST `/api/users/login` - Login with WeChat jsCode
+- GET `/api/users` - Get current user info (protected endpoint)
+- POST `/api/users` - Create a new user
+- PUT `/api/users` - Update current user info (protected endpoint)
+- DELETE `/api/users` - Delete current user (protected endpoint)
+- GET `/api/users/{openid}` - Get user by openid (admin endpoint)
+- PUT `/api/users/{openid}` - Update user by openid (admin endpoint)
+- DELETE `/api/users/{openid}` - Delete user by openid (admin endpoint)
 
 ## Authentication
 
