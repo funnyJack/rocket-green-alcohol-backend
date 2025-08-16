@@ -26,7 +26,7 @@ class UserService(
 
     fun createUser(userCreateModel: UserCreateModel): User {
         // Check if user with this openid already exists
-        if (userRepository.findByOpenid(userCreateModel.openid) != null) {
+        if (userRepository.existsByOpenid(userCreateModel.openid)) {
             throw BadRequestException("User with this openid already exists")
         }
 
@@ -39,6 +39,12 @@ class UserService(
         )
 
         return userRepository.save(user)
+    }
+
+    fun getUser(id: Long): User {
+        return userRepository.findById(id).orElseThrow {
+            throw NotFoundException("User not found")
+        }
     }
 
     fun getUserByOpenid(openid: String): User {
@@ -56,8 +62,15 @@ class UserService(
         return userRepository.save(user)
     }
 
-    fun deleteUser(openid: String) {
+    fun deleteUserByOpenid(openid: String) {
         val user = userRepository.findByOpenid(openid) ?: throw NotFoundException("User not found")
+        userRepository.delete(user)
+    }
+
+    fun deleteUser(id: Long) {
+        val user = userRepository.findById(id).orElseThrow {
+            throw NotFoundException("User not found")
+        }
         userRepository.delete(user)
     }
 
@@ -77,7 +90,7 @@ class UserService(
             throw BadRequestException("login failed, error code: ${result.errcode}, error message: ${result.errmsg}")
         }
         //保存当前用户
-        if (userRepository.findByOpenid(openid) == null) {
+        if (!userRepository.existsByOpenid(openid)) {
             createUser(UserCreateModel(openid = openid))
         }
         // 生成 JWT token

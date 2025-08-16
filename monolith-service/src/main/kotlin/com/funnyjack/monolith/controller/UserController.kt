@@ -38,10 +38,16 @@ class UserController(
         userService.getUserByOpenid(openid).toViewModel()
 
     //管理员获取人员
-    @GetMapping("/{openid}")
-    fun getUserByOpenid(@PathVariable openid: String): UserViewModel =
-        userService.getUserByOpenid(openid).toViewModel()
-
+    @GetMapping("/{id}")
+    fun getUserById(
+        @PathVariable id: Long,
+        @CurrentUserOpenId openid: String
+    ): UserViewModel {
+        if (!userService.checkIsSuperAdmin(openid)) {
+            throw UnauthorizedException("你没有权限进行查看")
+        }
+        return userService.getUser(id).toViewModel()
+    }
     @PutMapping
     fun updateCurrentUser(
         @CurrentUserOpenId openid: String,
@@ -57,13 +63,19 @@ class UserController(
 
     @DeleteMapping
     fun deleteCurrentUser(@CurrentUserOpenId openid: String) {
-        userService.deleteUser(openid)
+        userService.deleteUserByOpenid(openid)
     }
 
     //可能管理员需要删除某个成员
-    @DeleteMapping("/{openid}")
-    fun deleteUserByOpenid(@PathVariable openid: String) {
-        userService.deleteUser(openid)
+    @DeleteMapping("/{id}")
+    fun deleteUser(
+        @PathVariable id: Long,
+        @CurrentUserOpenId openid: String
+    ) {
+        if (!userService.checkIsSuperAdmin(openid)) {
+            throw UnauthorizedException("你没有权限删除用户")
+        }
+        userService.deleteUser(id)
     }
 
     @PostMapping("/login")

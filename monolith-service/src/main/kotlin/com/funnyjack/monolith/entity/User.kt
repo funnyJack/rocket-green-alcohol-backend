@@ -43,6 +43,7 @@ data class User(
 
 @Repository
 interface UserRepository : CrudRepository<User, Long>, JpaSpecificationExecutor<User> {
+    fun existsByOpenid(openid: String): Boolean
     fun findByOpenid(openid: String): User?
     fun existsByOpenidAndSuperAdminTrue(openid: String): Boolean
 }
