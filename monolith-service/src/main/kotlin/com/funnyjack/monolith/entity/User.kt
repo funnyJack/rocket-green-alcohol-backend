@@ -16,6 +16,9 @@ data class User(
     @Column(nullable = false, unique = true)
     var openid: String,
 
+    @Column(nullable = false)
+    var isSuperAdmin: Boolean = false,
+
     @Column
     var avatarUrl: String? = null,
 

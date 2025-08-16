@@ -20,6 +20,7 @@ data class UserPatchModel(
 data class UserViewModel(
     val id: Long,
     val openid: String,
+    val isSuperAdmin: Boolean,
     val avatarUrl: String?,
     val nickname: String?,
     val phoneNumber: String?,
@@ -30,6 +31,7 @@ data class UserViewModel(
 fun User.toViewModel(): UserViewModel {
     return UserViewModel(
         id = id,
+        isSuperAdmin = isSuperAdmin,
         openid = openid,
         avatarUrl = avatarUrl,
         nickname = nickname,
