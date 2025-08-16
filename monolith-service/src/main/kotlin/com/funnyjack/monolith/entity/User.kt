@@ -3,6 +3,7 @@ package com.funnyjack.monolith.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcType
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
@@ -16,8 +17,8 @@ data class User(
     @Column(nullable = false, unique = true)
     var openid: String,
 
-    @Column(nullable = false)
-    var isSuperAdmin: Boolean = false,
+    @Column(name = "is_super_admin", nullable = false)
+    var superAdmin: Boolean = false,
 
     @Column
     var avatarUrl: String? = null,
@@ -41,6 +42,7 @@ data class User(
 )
 
 @Repository
-interface UserRepository : CrudRepository<User, Long> {
+interface UserRepository : CrudRepository<User, Long>, JpaSpecificationExecutor<User> {
     fun findByOpenid(openid: String): User?
+    fun existsByOpenidAndSuperAdminTrue(openid: String): Boolean
 }

@@ -1,6 +1,33 @@
 package com.funnyjack.monolith.model
 
+import com.funnyjack.monolith.domain.SearchFilterCombineOperation
+import com.funnyjack.monolith.dsl.combineSpecification
+import com.funnyjack.monolith.dsl.equal
+import com.funnyjack.monolith.dsl.like
 import com.funnyjack.monolith.entity.User
+import com.funnyjack.monolith.util.fullTrim
+import org.springframework.data.jpa.domain.Specification
+
+data class UserSearchFilter(
+    val nicknameLike: String? = null,
+    val phoneNumberLike: String? = null,
+    val isSuperAdmin: Boolean? = null,
+) {
+    fun toSpecification(
+        searchFilterOperation: SearchFilterCombineOperation
+    ): Specification<User> {
+        val nicknameLike = nicknameLike?.fullTrim()?.ifBlank { null }
+        val phoneNumberLike = phoneNumberLike?.fullTrim()?.ifBlank { null }
+        return combineSpecification(
+            listOf(
+                nicknameLike?.let { User::nickname.like("%$it%") },
+                phoneNumberLike?.let { User::phoneNumber.like("%$it%") },
+                isSuperAdmin?.let { User::superAdmin.equal(it) }
+            ),
+            searchFilterOperation.toOperation()
+        )
+    }
+}
 
 data class UserCreateModel(
     val openid: String,
@@ -31,7 +58,7 @@ data class UserViewModel(
 fun User.toViewModel(): UserViewModel {
     return UserViewModel(
         id = id,
-        isSuperAdmin = isSuperAdmin,
+        isSuperAdmin = superAdmin,
         openid = openid,
         avatarUrl = avatarUrl,
         nickname = nickname,

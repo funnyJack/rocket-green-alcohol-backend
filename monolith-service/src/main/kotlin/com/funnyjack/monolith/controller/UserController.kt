@@ -1,13 +1,10 @@
 package com.funnyjack.monolith.controller
 
 import com.funnyjack.monolith.annotation.CurrentUserOpenId
-import com.funnyjack.monolith.entity.User
-import com.funnyjack.monolith.model.LoginRequestModel
-import com.funnyjack.monolith.model.UserCreateModel
-import com.funnyjack.monolith.model.UserPatchModel
-import com.funnyjack.monolith.model.UserViewModel
-import com.funnyjack.monolith.model.toViewModel
+import com.funnyjack.monolith.domain.SearchFilterCombineOperation
+import com.funnyjack.monolith.model.*
 import com.funnyjack.monolith.service.UserService
+import com.hiczp.spring.error.UnauthorizedException
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
@@ -17,6 +14,21 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val userService: UserService
 ) {
+    @PostMapping("/search")
+    fun search(
+        @RequestBody filter: UserSearchFilter,
+        @RequestParam(required = false, defaultValue = "OR")
+        searchFilterCombineOperation: SearchFilterCombineOperation,
+        @CurrentUserOpenId openid: String
+    ): List<UserViewModel> {
+        if (!userService.checkIsSuperAdmin(openid)) {
+            throw UnauthorizedException("你没有权限进行查询")
+        }
+        return userService.search(
+            filter.toSpecification(searchFilterCombineOperation)
+        ).map { it.toViewModel() }
+    }
+
     @PostMapping
     fun createUser(@RequestBody userCreateModel: UserCreateModel): UserViewModel =
         userService.createUser(userCreateModel).toViewModel()

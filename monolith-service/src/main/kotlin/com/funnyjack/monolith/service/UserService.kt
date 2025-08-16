@@ -10,6 +10,7 @@ import com.funnyjack.monolith.model.UserPatchModel
 import com.funnyjack.monolith.util.JwtUtil
 import com.hiczp.spring.error.BadRequestException
 import com.hiczp.spring.error.NotFoundException
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
@@ -19,6 +20,10 @@ class UserService(
     private val objectMapper: ObjectMapper,
     private val userRepository: UserRepository
 ) {
+    fun search(specification: Specification<User>) = userRepository.findAll(specification)
+
+    fun checkIsSuperAdmin(openid: String) = userRepository.existsByOpenidAndSuperAdminTrue(openid)
+
     fun createUser(userCreateModel: UserCreateModel): User {
         // Check if user with this openid already exists
         if (userRepository.findByOpenid(userCreateModel.openid) != null) {
