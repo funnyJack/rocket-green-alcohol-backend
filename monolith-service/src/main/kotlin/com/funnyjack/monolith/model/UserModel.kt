@@ -42,7 +42,7 @@ data class UserPatchModel(
     val nickname: String? = null,
     val phoneNumber: String? = null,
     val address: String? = null,
-    val referralCode: String? = null
+    val referrerCode: String? = null
 )
 
 data class UserViewModel(
@@ -54,8 +54,9 @@ data class UserViewModel(
     val phoneNumber: String?,
     val address: String?,
     val currentContractType: String?,
-    val referralCode: String?,
+    val referralCode: String,
     val referrerNickname: String?,
+    val referrerCode:String?
 )
 
 fun User.toViewModel(): UserViewModel {
@@ -69,6 +70,7 @@ fun User.toViewModel(): UserViewModel {
         address = address,
         currentContractType = currentContractType?.displayName,
         referralCode = referralCode,
-        referrerNickname = referrer?.nickname
+        referrerNickname = referrer?.nickname,
+        referrerCode = referrer?.referralCode
     )
 }
