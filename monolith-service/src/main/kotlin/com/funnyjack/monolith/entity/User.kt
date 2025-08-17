@@ -37,6 +37,16 @@ data class User(
     @JdbcType(PostgreSQLEnumJdbcType::class)
     var currentContractType: ContractType? = null,
 
+    @Column(name = "referral_code", length = 7)
+    var referralCode: String = "",
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "referrer_id")
+    var referrer: User? = null,
+
+    @OneToMany(mappedBy = "referrer", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var referredUsers: MutableSet<User> = mutableSetOf(),
+
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var orders: List<Order> = mutableListOf()
 )
