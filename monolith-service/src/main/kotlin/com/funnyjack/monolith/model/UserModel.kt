@@ -41,7 +41,8 @@ data class UserPatchModel(
     val avatarUrl: String? = null,
     val nickname: String? = null,
     val phoneNumber: String? = null,
-    val address: String? = null
+    val address: String? = null,
+    val referralCode: String? = null
 )
 
 data class UserViewModel(

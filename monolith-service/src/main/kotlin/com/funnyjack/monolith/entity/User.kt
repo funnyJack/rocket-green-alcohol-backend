@@ -68,4 +68,5 @@ interface UserRepository : CrudRepository<User, Long>, JpaSpecificationExecutor<
     fun findByOpenid(openid: String): User?
     fun existsByOpenidAndSuperAdminTrue(openid: String): Boolean
     fun existsByReferralCode(referralCode: String): Boolean
+    fun findByReferralCode(referralCode: String): User?
 }

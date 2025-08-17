@@ -59,7 +59,19 @@ class UserService(
 
     fun updateUser(openid: String, patchModel: UserPatchModel): User {
         val user = userRepository.findByOpenid(openid) ?: throw NotFoundException("User not found")
-
+        patchModel.referralCode?.let {
+            if (user.referrer != null) {
+                throw BadRequestException("你已经有推荐人了，不能修改推荐码")
+            }
+            val referrer = userRepository.findByReferralCode(it) ?: throw BadRequestException("推荐码无效")
+            if (referrer.id == user.id) {
+                throw BadRequestException("不能推荐自己")
+            }
+            if (referrer.superAdmin) {
+                throw BadRequestException("管理员不能推荐用户")
+            }
+            user.referrer = referrer
+        }
         patchModel.avatarUrl?.let { user.avatarUrl = it }
         patchModel.nickname?.let { user.nickname = it }
         patchModel.phoneNumber?.let { user.phoneNumber = it }
