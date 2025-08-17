@@ -53,7 +53,9 @@ data class UserViewModel(
     val nickname: String?,
     val phoneNumber: String?,
     val address: String?,
-    val currentContractType: String? = null
+    val currentContractType: String?,
+    val referralCode: String?,
+    val referrerNickname: String?,
 )
 
 fun User.toViewModel(): UserViewModel {
@@ -65,6 +67,8 @@ fun User.toViewModel(): UserViewModel {
         nickname = nickname,
         phoneNumber = phoneNumber,
         address = address,
-        currentContractType = currentContractType?.displayName
+        currentContractType = currentContractType?.displayName,
+        referralCode = referralCode,
+        referrerNickname = referrer?.nickname
     )
 }
