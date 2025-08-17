@@ -14,16 +14,16 @@ class OrderService(
     private val orderRepository: OrderRepository,
     private val userRepository: UserRepository
 ) {
-    fun createOrder(openid: String,orderCreateModel: OrderCreateModel): Order {
+    fun createOrder(openid: String, orderCreateModel: OrderCreateModel): Order {
         // Check if user with this openid exists
-        val user= userRepository.findByOpenid(openid)
-        if (user == null) {
-            throw BadRequestException("User with this openid does not exist")
+        val user = userRepository.findByOpenid(openid)
+            ?: throw BadRequestException("User with this openid does not exist")
+        if (user.referrer == null) {
+            throw BadRequestException("你还没有推荐人，不能创建订单")
         }
-
-       val savedUser= user.apply{
+        val savedUser = user.apply {
             this.currentContractType = orderCreateModel.contractType
-        }.let{
+        }.let {
             userRepository.save(it)
         }
 
