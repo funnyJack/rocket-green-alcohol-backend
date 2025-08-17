@@ -20,7 +20,7 @@ class UserService(
     private val objectMapper: ObjectMapper,
     private val userRepository: UserRepository
 ) {
-    fun search(specification: Specification<User>) = userRepository.findAll(specification)
+    fun search(specification: Specification<User>): List<User> = userRepository.findAll(specification)
 
     fun checkIsSuperAdmin(openid: String) = userRepository.existsByOpenidAndSuperAdminTrue(openid)
 
@@ -29,13 +29,19 @@ class UserService(
         if (userRepository.existsByOpenid(userCreateModel.openid)) {
             throw BadRequestException("User with this openid already exists")
         }
+        var referralCode: String
+        //确保推荐码不重复
+        do {
+            referralCode = User.generateReferralCode()
+        } while (userRepository.existsByReferralCode(referralCode))
 
         val user = User(
             openid = userCreateModel.openid,
             avatarUrl = userCreateModel.avatarUrl,
             nickname = userCreateModel.nickname,
             phoneNumber = userCreateModel.phoneNumber,
-            address = userCreateModel.address
+            address = userCreateModel.address,
+            referralCode = referralCode
         )
 
         return userRepository.save(user)

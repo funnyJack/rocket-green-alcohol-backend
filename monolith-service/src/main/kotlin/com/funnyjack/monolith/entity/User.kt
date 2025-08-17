@@ -49,11 +49,23 @@ data class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var orders: List<Order> = mutableListOf()
-)
+) {
+    companion object {
+        private const val REFERRAL_CODE_LENGTH = 6
+        private const val REFERRAL_CODE_CHARS = "ACEFGHJKLMNPQRSTUVWXYZ2345679" // 去除了易混淆字符
+
+        fun generateReferralCode(): String {
+            return (1..REFERRAL_CODE_LENGTH)
+                .map { REFERRAL_CODE_CHARS.random() }
+                .joinToString("")
+        }
+    }
+}
 
 @Repository
 interface UserRepository : CrudRepository<User, Long>, JpaSpecificationExecutor<User> {
     fun existsByOpenid(openid: String): Boolean
     fun findByOpenid(openid: String): User?
     fun existsByOpenidAndSuperAdminTrue(openid: String): Boolean
+    fun existsByReferralCode(referralCode: String): Boolean
 }
