@@ -35,17 +35,17 @@ class OrderService(
         fun modifyOrder(user: User, amount: Int) {
             when (user.currentContractType!!) {
                 ContractType.CONTRACTED_OWNER -> {
-                    order.contractedOwnerId = user.id.toInt()
+                    order.contractedOwnerId = user.id
                     order.contractedOwnerAmount = amount
                 }
 
                 ContractType.GREEN_ALCOHOL_PIONEER -> {
-                    order.greenAlcoholPioneerId = user.id.toInt()
+                    order.greenAlcoholPioneerId = user.id
                     order.greenAlcoholPioneerAmount = amount
                 }
 
                 ContractType.GREEN_ALCOHOL_PARTNERS -> {
-                    order.greenAlcoholPartnersId = user.id.toInt()
+                    order.greenAlcoholPartnersId = user.id
                     order.greenAlcoholPartnersAmount = amount
                 }
             }
