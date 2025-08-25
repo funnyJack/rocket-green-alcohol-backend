@@ -2,6 +2,10 @@ package com.funnyjack.monolith.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.funnyjack.monolith.constant.LoginConstant
+import com.funnyjack.monolith.dsl.equal
+import com.funnyjack.monolith.dsl.or
+import com.funnyjack.monolith.entity.Order
+import com.funnyjack.monolith.entity.OrderRepository
 import com.funnyjack.monolith.entity.User
 import com.funnyjack.monolith.entity.UserRepository
 import com.funnyjack.monolith.model.LoginResponseModel
@@ -18,7 +22,8 @@ import org.springframework.web.util.UriComponentsBuilder
 @Service
 class UserService(
     private val objectMapper: ObjectMapper,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val orderRepository: OrderRepository
 ) {
     fun search(specification: Specification<User>): List<User> = userRepository.findAll(specification)
 
@@ -51,6 +56,27 @@ class UserService(
         return userRepository.findById(id).orElseThrow {
             throw NotFoundException("User not found")
         }
+    }
+
+    fun getUserGrossProfit(openid: String): Int {
+        val user = getUserByOpenid(openid)
+        val contractedOwnerAmount =
+            orderRepository.findByContractedOwnerId(user.id).sumOf { order -> order.contractedOwnerAmount ?: 0 }
+        val greenAlcoholPioneerAmount =
+            orderRepository.findByGreenAlcoholPioneerId(user.id).sumOf { order -> order.greenAlcoholPioneerAmount ?: 0 }
+        val greenAlcoholPartnersAmount = orderRepository.findByGreenAlcoholPartnersId(user.id)
+            .sumOf { order -> order.greenAlcoholPartnersAmount ?: 0 }
+        return contractedOwnerAmount + greenAlcoholPioneerAmount + greenAlcoholPartnersAmount
+    }
+
+    fun getUserGrossProfitDetail(openid: String): List<Order> {
+        val user = getUserByOpenid(openid)
+        val specification = or(
+            Order::contractedOwnerId.equal(user.id.toInt()),
+            Order::greenAlcoholPioneerId.equal(user.id.toInt()),
+            Order::greenAlcoholPartnersId.equal(user.id.toInt())
+        )
+        return orderRepository.findAll(specification)
     }
 
     fun getUserByOpenid(openid: String): User {

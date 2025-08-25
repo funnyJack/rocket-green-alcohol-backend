@@ -37,6 +37,16 @@ class UserController(
     fun getCurrentUser(@CurrentUserOpenId openid: String): UserViewModel =
         userService.getUserByOpenid(openid).toViewModel()
 
+    @GetMapping("/grossProfit")
+    fun getGrossProfit(
+        @CurrentUserOpenId openid: String
+    ) = userService.getUserGrossProfit(openid)
+
+    @GetMapping("/grossProfitDetail")
+    fun getGrossProfitDetail(
+        @CurrentUserOpenId openid: String
+    ) = userService.getUserGrossProfitDetail(openid).map { it.toViewModel() }
+
     //管理员获取人员
     @GetMapping("/{id}")
     fun getUserById(
@@ -48,6 +58,7 @@ class UserController(
         }
         return userService.getUser(id).toViewModel()
     }
+
     @PutMapping
     fun updateCurrentUser(
         @CurrentUserOpenId openid: String,

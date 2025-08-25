@@ -3,6 +3,7 @@ package com.funnyjack.monolith.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcType
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
@@ -22,19 +23,19 @@ data class Order(
     var contractType: ContractType,
 
     @Column
-    var contractedOwnerId: Int? = null,
+    var contractedOwnerId: Long? = null,
 
     @Column
     var contractedOwnerAmount: Int? = null,
 
     @Column
-    var greenAlcoholPioneerId: Int? = null,
+    var greenAlcoholPioneerId: Long? = null,
 
     @Column
     var greenAlcoholPioneerAmount: Int? = null,
 
     @Column
-    var greenAlcoholPartnersId: Int? = null,
+    var greenAlcoholPartnersId: Long? = null,
 
     @Column
     var greenAlcoholPartnersAmount: Int? = null
@@ -47,4 +48,8 @@ enum class ContractType(val displayName: String, val totalGrossProfit: Int) {
 }
 
 @Repository
-interface OrderRepository : CrudRepository<Order, Long>
+interface OrderRepository : CrudRepository<Order, Long>, JpaSpecificationExecutor<Order> {
+    fun findByContractedOwnerId(contractedOwnerId: Long): List<Order>
+    fun findByGreenAlcoholPioneerId(greenAlcoholPioneerId: Long): List<Order>
+    fun findByGreenAlcoholPartnersId(greenAlcoholPartnersId: Long): List<Order>
+}
