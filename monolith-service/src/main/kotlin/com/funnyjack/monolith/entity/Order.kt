@@ -19,13 +19,31 @@ data class Order(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
-    var contractType: ContractType
+    var contractType: ContractType,
+
+    @Column
+    var contractedOwnerId: Int? = null,
+
+    @Column
+    var contractedOwnerAmount: Int? = null,
+
+    @Column
+    var greenAlcoholPioneerId: Int? = null,
+
+    @Column
+    var greenAlcoholPioneerAmount: Int? = null,
+
+    @Column
+    var greenAlcoholPartnersId: Int? = null,
+
+    @Column
+    var greenAlcoholPartnersAmount: Int? = null
 )
 
-enum class ContractType(val displayName:String) {
-    CONTRACTED_OWNER("签约车主"),
-    GREEN_ALCOHOL_PIONEER("绿醇先锋"),
-    GREEN_ALCOHOL_PARTNERS("绿醇合伙人")
+enum class ContractType(val displayName: String, val totalGrossProfit: Int) {
+    CONTRACTED_OWNER("签约车主", 200),
+    GREEN_ALCOHOL_PIONEER("绿醇先锋", 300),
+    GREEN_ALCOHOL_PARTNERS("绿醇合伙人", 1500)
 }
 
 @Repository

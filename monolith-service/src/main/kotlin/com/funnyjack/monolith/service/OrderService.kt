@@ -1,8 +1,7 @@
 package com.funnyjack.monolith.service
 
-import com.funnyjack.monolith.entity.Order
-import com.funnyjack.monolith.entity.OrderRepository
-import com.funnyjack.monolith.entity.UserRepository
+import com.funnyjack.monolith.constant.OrderConstant
+import com.funnyjack.monolith.entity.*
 import com.funnyjack.monolith.model.OrderCreateModel
 import com.funnyjack.monolith.model.OrderPatchModel
 import com.hiczp.spring.error.BadRequestException
@@ -26,12 +25,56 @@ class OrderService(
         }.let {
             userRepository.save(it)
         }
-
         val order = Order(
             user = savedUser,
             contractType = orderCreateModel.contractType
         )
 
+        //处理利润分配的逻辑
+        //针对不同的用户类型，填写 order 的不同字段
+        fun modifyOrder(user: User, amount: Int) {
+            when (user.currentContractType!!) {
+                ContractType.CONTRACTED_OWNER -> {
+                    order.contractedOwnerId = user.id.toInt()
+                    order.contractedOwnerAmount = amount
+                }
+
+                ContractType.GREEN_ALCOHOL_PIONEER -> {
+                    order.greenAlcoholPioneerId = user.id.toInt()
+                    order.greenAlcoholPioneerAmount = amount
+                }
+
+                ContractType.GREEN_ALCOHOL_PARTNERS -> {
+                    order.greenAlcoholPartnersId = user.id.toInt()
+                    order.greenAlcoholPartnersAmount = amount
+                }
+            }
+        }
+        // 拿出当前 contract type 的总利润
+        var totalGrossProfit = orderCreateModel.contractType.totalGrossProfit
+        //从当前用户的推荐人开始，逐级向上分配利润，直到利润分配完毕或者没有推荐人为止
+        var currentUser: User = user
+        var userGrossProfitTemp = 0
+        while (totalGrossProfit > 0) {
+            val referrer = currentUser.referrer!!
+            //计算推荐人应得的利润
+            val grossProfit = OrderConstant.getUserGrossProfit(
+                orderCreateModel.contractType, referrer.currentContractType!!
+            )
+            //如果当前推荐人的利润与上一个获得利润的推荐人一样，则说明当前推荐人与上一个推荐人平级，不应该获得利润，继续向上寻找
+            if (grossProfit == userGrossProfitTemp) {
+                currentUser = referrer
+                continue
+            }
+            //推荐人实际应得的利润
+            val actualGrossProfit = grossProfit - userGrossProfitTemp
+            //填写订单
+            modifyOrder(referrer, actualGrossProfit)
+            // 更新已分配的利润
+            totalGrossProfit = totalGrossProfit - actualGrossProfit
+            currentUser = referrer
+            userGrossProfitTemp = grossProfit
+        }
         return orderRepository.save(order)
     }
 
