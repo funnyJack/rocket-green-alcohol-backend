@@ -23,7 +23,6 @@ data class Order(
 )
 
 enum class ContractType(val displayName:String) {
-    HYDROGEN_FRIENDS("氢友"),
     CONTRACTED_OWNER("签约车主"),
     GREEN_ALCOHOL_PIONEER("绿醇先锋"),
     GREEN_ALCOHOL_PARTNERS("绿醇合伙人")
